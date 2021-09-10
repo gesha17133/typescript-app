@@ -1,15 +1,32 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Form, Input, Button } from 'antd';
 import { rules } from "../utils/rules";
-
+import { useDispatch } from "react-redux";
+import { AuthActionCreators } from "../store/reducers/auth/action-creators";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 const LoginForm:FC = () => {
+
     
+    const dispatch = useDispatch();
+
     const submit = () => {
-        console.log('123')
+        dispatch( AuthActionCreators.login( username, password ) );
     }
 
+    const { error, isLoading } = useTypedSelector(state => state.auth);
+    
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    
     return(
+
         <div className="formWrapper">
+            
+            {error && <div style={{color: 'red'}}>
+                {error}
+            </div>}
+
             <Form
                 onFinish={submit}
             >
@@ -17,7 +34,7 @@ const LoginForm:FC = () => {
                            name ='username'
                            rules={[rules.required('Please input your name here')]} 
                 >
-                    <Input/>
+                    <Input value={username} onChange={ e => setUsername(e.target.value) }/>
                 </Form.Item>
                 
                 <Form.Item
@@ -26,11 +43,11 @@ const LoginForm:FC = () => {
                     rules={[rules.required('Enter your password')]}
                     >
                     
-                    <Input.Password />
+                    <Input.Password value={password} onChange={ e => setPassword( e.target.value ) }/>
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={isLoading}>
                         Submit
                     </Button>
                 </Form.Item>
