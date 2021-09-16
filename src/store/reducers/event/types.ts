@@ -19,7 +19,7 @@ export interface SetGuestsAction {
 }
 
 export interface SetEventsAction {
-    type: EventActionEnum.SET_GUESTS,
+    type: EventActionEnum.SET_EVENTS,
     payload: IEvent[]
 }
 
